@@ -5,6 +5,3 @@ export default {
     return User.create(payload);
   },
 };
-
-const mason = await User.create({ name: "Mason" });
-console.log(mason.name);
