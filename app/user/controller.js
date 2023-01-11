@@ -1,3 +1,10 @@
 import User from "./model.js";
 
-const Mason = await User.create({ name: "Mason" });
+export default {
+  create(payload) {
+    return User.create(payload);
+  },
+};
+
+const mason = await User.create({ name: "Mason" });
+console.log(mason.name);
