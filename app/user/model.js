@@ -3,6 +3,14 @@ import { DataTypes } from "sequelize";
 import config from "../config.js";
 import sequelize from "../conn.js";
 
+async function sanitizeUser(user) {
+  user.username = user.username.toLowerCase();
+  user.email = user.email.toLowerCase();
+
+  const salt = await bcrypt.genSalt(config.saltRounds);
+  user.password = await bcrypt.hash(user.password, salt);
+}
+
 const User = sequelize.define(
   "User",
   {
@@ -48,9 +56,7 @@ await User.sync().catch((err) => {
   process.exit(1);
 });
 
-User.beforeCreate(async (user) => {
-  const salt = await bcrypt.genSalt(config.saltRounds);
-  user.password = await bcrypt.hash(user.password, salt);
-});
+User.beforeCreate(sanitizeUser);
+User.beforeUpdate(sanitizeUser);
 
 export default User;
