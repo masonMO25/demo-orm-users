@@ -14,43 +14,52 @@ async function sanitizeUser(user) {
 const User = sequelize.define(
   "User",
   {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      valitdate: {
+      validate: {
         isAlphanumeric: { msg: "Username must be alphanumeric" },
+        notNull: {
+          msg: "Username cannot be null",
+        },
+      },
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: {
+          args: [8],
+          msg: "Password must be at least 8 characters long",
+        },
+        notNull: {
+          msg: "Password cannot be null",
+        },
       },
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      len: {
-        args: [8],
-      },
-      notNull: {
-        msg: "Password must be at least 8 characters long.",
+      unique: true,
+      validate: {
+        isEmail: { msg: "Email must be valid" },
+        notNull: {
+          msg: "Email cannot be null",
+        },
       },
     },
   },
   {
-    sequelize,
     timestamps: false,
-    freezeTableName: true,
+    sequelize,
     underscored: true,
-    modelName: "user",
   }
 );
 
+await User.sync().catch((err) => {
+  console.error(`Error syncing User model/table: ${err.message}`);
+  process.exit(1);
+});
 await User.sync().catch((err) => {
   console.error("Error syncing the database: ", err.message);
   process.exit(1);

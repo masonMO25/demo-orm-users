@@ -7,7 +7,7 @@ router.post("/", (req, res) => {
   userController
     .create(req.body)
     .then((user) => {
-      res.status(201).json(user);
+      res.status(201).json({ message: `User ${user.username} created` });
     })
     .catch((err) => {
       if (
@@ -22,13 +22,17 @@ router.post("/", (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const foundUser = await userController.findByUsername(req.body.username);
-  const isAuth = await foundUser?.User.isValidPassword(req.body.password);
+  // We ask the controller to do stuff that needs access to the database
+  const foundUser = await userController.show(req.body.username);
+
+  // We ask the model to do stuff that doesn't need access to the database
+  // * Use conditional chaining to avoid a TypeError when 'foundUser' is null
+  const isAuth = await foundUser?.isValidPassword(req.body.password);
 
   if (foundUser && isAuth) {
-    res.json({ message: "Login successdful " });
+    res.json({ message: "Login successful" });
   } else {
-    res.send(401).json({ error: "Login failed" });
+    res.status(401).json({ error: "Login failed" });
   }
 });
 
