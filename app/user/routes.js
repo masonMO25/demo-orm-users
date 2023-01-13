@@ -21,4 +21,15 @@ router.post("/", (req, res) => {
     });
 });
 
+router.post("/login", async (req, res) => {
+  const foundUser = await userController.findByUsername(req.body.username);
+  const isAuth = await foundUser?.User.isValidPassword(req.body.password);
+
+  if (foundUser && isAuth) {
+    res.json({ message: "Login successdful " });
+  } else {
+    res.send(401).json({ error: "Login failed" });
+  }
+});
+
 export default router;

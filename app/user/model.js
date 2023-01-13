@@ -58,9 +58,9 @@ await User.sync().catch((err) => {
 
 User.beforeCreate(sanitizeUser);
 User.beforeUpdate(sanitizeUser);
-User.prototype.isValidPassword = async function (password) {
-  const isValid = await bcrypt.compare(password, this.password);
-  return isValid;
+
+User.prototype.isValidPassword = function (password) {
+  return bcrypt.compare(password, this.password);
 };
 
 export default User;
