@@ -7,5 +7,6 @@ export default {
     name: process.env.DB_NAME,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
+    saltRounds: Number(process.env.SALT_ROUNDS),
   },
 };
