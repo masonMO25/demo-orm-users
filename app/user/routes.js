@@ -10,7 +10,14 @@ router.post("/", (req, res) => {
       res.status(201).json(user);
     })
     .catch((err) => {
-      res.status(500).json({ error: err.message });
+      if (
+        err.message.includes("notNull Violation") ||
+        err.message.includes("Validation error")
+      ) {
+        res.status(400).json({ error: err.message });
+      } else {
+        res.status(500).json({ error: err.message });
+      }
     });
 });
 
