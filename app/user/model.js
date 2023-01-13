@@ -13,6 +13,9 @@ const User = sequelize.define(
     username: {
       type: DataTypes.STRING,
       allowNull: false,
+      valitdate: {
+        isAlphanumeric: { msg: "Username must be alphanumeric" },
+      },
     },
     email: {
       type: DataTypes.STRING,
@@ -21,6 +24,12 @@ const User = sequelize.define(
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+      len: {
+        args: [8],
+      },
+      notNull: {
+        msg: "Password must be at least 8 characters long.",
+      },
     },
   },
   {
